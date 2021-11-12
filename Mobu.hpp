@@ -83,13 +83,13 @@ public:
 		}
 	}
 
-	bool intersect1(Player& player)
+	bool intersect_playerBody_Mobu(Player& player)
 	{
 		return player.getBody().intersects(getBody());
 		//SoundAsset(L"wall").playMulti();
 	}
 
-	bool intersect2(Player& player) const
+	bool intersect_playerDirectionFacing_Mobu(Player& player) const
 	{
 		return (player.getFace().intersects(getBody()));
 	}
@@ -102,11 +102,11 @@ public:
 			anime.update();
 		}
 	
-		if (intersect1(*player))
+		if (intersect_playerBody_Mobu(*player))
 		{
 			player->pos -= player->speed;
 		}
-		if (intersect2(*player)&& Input::KeyEnter.clicked)
+		if (intersect_playerDirectionFacing_Mobu(*player)&& Input::KeyEnter.clicked)
 		{
 			SoundAsset(L"˜b‚µ‚©‚¯‚é").playMulti();
 			TextManager::text->start(phrase);
@@ -115,91 +115,91 @@ public:
 		if (!TextManager::text->isActive())
 		{
 			count++;
-			if (type == MoveType::Stop)
-			{
-				
-				if (count > 250)
-				{
-					uint32 directionNumber = Random(0, 3);
-					if (directionNumber == 0)
-					{
-						direction = MobuDirection::Backward;
-					}
-					else if(directionNumber == 1)
-					{
-						direction = MobuDirection::Forward;
-					}
-					else if(directionNumber == 2)
-					{
-						direction = MobuDirection::Left;
-					}
-					else if(directionNumber == 3)
-					{
-						direction = MobuDirection::Right;
-					}
-					count = 0;;
-				}
-			}
 			switch (type)
 			{
-			case MoveType::SideMove:
-				if (distance > 100)
-				{
-					switch (direction)
+				case MoveType::Stop:
+					if (count > 250)
 					{
-					case MobuDirection::Forward:
-						direction = MobuDirection::Backward;
-						break;
-					case MobuDirection::Backward:
-						direction = MobuDirection::Forward;
-						break;
-					case MobuDirection::Right:
-						direction = MobuDirection::Left;
-						break;
-					case MobuDirection::Left:
-						direction = MobuDirection::Right;
-						break;
-					default:
-						break;
+						uint32 directionNumber = Random(0, 3);
+						if (directionNumber == 0)
+						{
+							direction = MobuDirection::Backward;
+						}
+						else if (directionNumber == 1)
+						{
+							direction = MobuDirection::Forward;
+						}
+						else if (directionNumber == 2)
+						{
+							direction = MobuDirection::Left;
+						}
+						else if (directionNumber == 3)
+						{
+							direction = MobuDirection::Right;
+						}
+						count = 0;;
+					}
+					break;
+				case MoveType::SideMove:
+					if (distance > 100)
+					{
+						switch (direction)
+						{
+							case MobuDirection::Forward:
+								direction = MobuDirection::Backward;
+							break;
+							case MobuDirection::Backward:
+								direction = MobuDirection::Forward;
+							break;
+							case MobuDirection::Right:
+								direction = MobuDirection::Left;
+							break;
+							case MobuDirection::Left:
+								direction = MobuDirection::Right;
+							break;
+						default:
+							break;
 					}
 					distance = 0;
 				}
-				switch (direction)
-				{
-				case MobuDirection::Forward:
-					if (!intersect1(*player))
+					switch (direction)
 					{
-						pos.y += speed;
-					}
-					break;
-				case MobuDirection::Backward:
-					if (!intersect1(*player))
-					{
-						pos.y -= speed;
-					}
-					break;
-				case MobuDirection::Right:
-					if (!intersect1(*player))
-					{
-						pos.x += speed;
-					}
-					break;
-				case MobuDirection::Left:
-					if (!intersect1(*player))
-					{
-						pos.x -= speed;
+						case MobuDirection::Forward:
+						if (!intersect_playerBody_Mobu(*player))
+						{
+							pos.y += speed;
+						}
+						break;
+						case MobuDirection::Backward:
+							if (!intersect_playerBody_Mobu(*player))
+							{
+								pos.y -= speed;
+							}
+						break;
+						case MobuDirection::Right:
+						if (!intersect_playerBody_Mobu(*player))
+						{
+							pos.x += speed;
+						}
+						break;
+						case MobuDirection::Left:
+							if (!intersect_playerBody_Mobu(*player))
+							{
+								pos.x -= speed;
+							}
+						break;
+						default:
+						break;
 					}
 					break;
 				default:
-					break;
-				}
-				if (!intersect1(*player))
-				{
-					distance += speed;
-				}
-			default:
 				break;
 			}
+		}
+
+		if (!intersect_playerBody_Mobu(*player))
+		{
+			distance += speed;
 		}
 	}
 
